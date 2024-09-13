@@ -1,0 +1,48 @@
+Setup EC2 instance
+Amazon EC2 is a service providing scalable computing capacity within AWS Cloud. It provides the user to control computing resources and helps to run on the best computing environment. An instance is the virtual server on Amazon EC2 that helps run applications.
+
+Instructions to setup instance:
+Login to aws console and go to EC2 dashboard.
+Click on Launch Instance
+Name your instance.
+Choose an AMI.
+An AMI is a template to create a new instance or virtual machine base on user requirements. It will contain information about software, operating system, volume and access permission. There are two types of AMI: Predefined AMIs and Custom AMIs. Predefined AMI are created by Amazon and user can modify them while Custom AMIs are created by users and can be reused.
+Here, I will choose Ubuntu AMI.
+Choose an instance type.
+An instance type specifies the hardware specifications that are required in the machine from the previous step. Instance types are fixed, and their configurations cannot be altered. Instance types belong to five main families:
+i) Compute-optimized: For situations that require a lot of processing power
+ii) Memory-optimized: For setting up something to do with your in-memory cache
+iii) GPU optimized: For setting up a gaming system, or something with the requirement of a large graphic
+iv) Storage optimized: When you need to set up a storage server
+v) General-purpose: When everything is equally balanced
+I am choosing a free-tier general purpose instance type t2.micro for this demo purpose.
+Create a new key pair and select it. Key pair is used to securely connect the instance. It consists of a public and private key. Amazon EC2 stores the public key on instance and we store private key. Make sure you have downloaded a .pem file.
+In network settings, you can either create a new security group or select existing on. Here, we will create a new security group, name it and add inbound security group rules to allow request on port 22 and 8000 (on which backend application will run).
+For this,
+i) click on edit button
+ii) select a VPC, subnet and enable auto-assign public IP. You can create a new VPC with public and private subnets and select them as well.
+iii) select Create security group, name the security group and add description.
+iv) Add inbound security group rules.
+a. Select type ssh, input 22 as Port range, select My IP as Source type if you want to be able to ssh into server from your network only or select Custom and select source which can be a security group, CIDR block or prefix list else anywhere.
+b. Select type Custom, input 8000 as Port range, select Anywhere as Source type.
+
+8. Configure storage. Input size based on the application size. By default, it is 8GB.
+9. Input value 1 in Number of instance and Click on Launch instance.
+
+
+Wait for few minutes to get the instance initialized and running.
+
+
+Deploy application
+Connect to instance. In order to connect to instance, click in Connect button and go to SSH client. Follow the steps in your local machine’s terminal.
+Once you are connected to the instance, deploy the application.
+Since I already have a docker image of the backend application pushed to Amazon ECR therefore I will follow the following steps:
+i) Install docker.
+ii) Download and configure AWS CLI.
+iii) Retrieve an authentication token and authenticate Docker client to ECR registry using AWS CLI. You can get this command from your ECR repository. See View push commands.
+iv) Pull your docker image and run in instance. I will be running server in port 8000 with container name ec2-asg-alb in background.
+You can check the status of container using docker ps command.
+aws ecr get-login-password --region us-east-1 | docker login --username AWS --password-stdin 310527819312.dkr.ecr.us-east-1.amazonaws.com
+docker pull 310527819312.dkr.ecr.us-east-1.amazonaws.com/ec2-asg-nlb:latest
+docker run -d -p 8000:8000 --name ec2-asg-alb 310527819312.dkr.ecr.us-east-1.amazonaws.com/ec2-asg-nlb:latest
+You can now access to your application server using public IP of the EC2 instance and port.

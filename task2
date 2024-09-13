@@ -1,0 +1,10 @@
+1]    go to i am service >
+click to add user > 
+give name >
+select provide access to the aws management console >
+click i want to create an IAM user> 
+click to custom password >
+give password >
+disable the user must create a new password...> 
+next > add user in group >
+download csv.file > create user

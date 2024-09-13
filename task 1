@@ -1,0 +1,14 @@
+ * how to create bucket and add policy or create user and give policy and permission to user *
+
+
+
+    create bucket
+   
+1 =   go to s3 service and click on bucket
+2 =   click to create bucket 
+3 =   give a name to bucket
+4=    acl be disabled
+5 =   scroll down and click on create bucket (bucket is created)
+
+
+   create policy
